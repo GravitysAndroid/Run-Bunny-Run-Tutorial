@@ -14,6 +14,8 @@ public class BunnyController : MonoBehaviour
     public Text scoreText;
     private float startTime;
     private int jumpsLeft = 2;
+    public AudioSource jumpSfx;
+    public AudioSource deathSfx;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +30,10 @@ public class BunnyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("Title");
+        }
         if (bunnyHurtTime == -1)
         {
             if (Input.GetButtonUp("Jump") && jumpsLeft > 0)
@@ -47,6 +53,8 @@ public class BunnyController : MonoBehaviour
                 }
 
                 jumpsLeft--;
+
+                jumpSfx.Play();
             }
 
             myAnim.SetFloat("vVelocity", myRigedBody.velocity.y);
@@ -80,6 +88,7 @@ public class BunnyController : MonoBehaviour
             myRigedBody.velocity = Vector2.zero;
             myRigedBody.AddForce(transform.up * bunnyJumpForce);
             myCollider.enabled = false;
+            deathSfx.Play();
         }
         else if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Ground"))
         {
